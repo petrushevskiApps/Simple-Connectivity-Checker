@@ -2,6 +2,10 @@ using PetrushevskiApps.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace MyNamespace
+{
+    
+}
 public class UINetworkButton : MonoBehaviour
 {
     private Button networkButton;

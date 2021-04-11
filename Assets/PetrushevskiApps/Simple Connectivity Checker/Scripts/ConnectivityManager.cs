@@ -39,7 +39,10 @@ namespace PetrushevskiApps.Utilities
         /// or it was stopped.
         /// </summary>
         public bool IsTestingConnectivity { get; private set; } = false;
-        
+
+        /// <summary>
+        /// This property works only in editor and is used to toggle fake connect / disconnect
+        /// </summary>
         public bool IsConnectedDebugToggle
         {
             get
@@ -58,9 +61,10 @@ namespace PetrushevskiApps.Utilities
                 }
             }
         }
-        
+
         /// <summary>
-        /// Check if there is network connection.
+        /// This property should be used to check if there is internet connectivity or not.
+        /// If there is internet connection this property will return true, otherwise false.
         /// </summary>
         public bool IsConnected
         {
@@ -93,7 +97,11 @@ namespace PetrushevskiApps.Utilities
         }
 
         /// <summary>
-        /// Register to connection status changes event.
+        /// Use this method to register to On Connectivity Change listener and receive events
+        /// when the connectivity status changes. For example, this event will be sent when
+        /// connection changes from ON to OFF and the Unity Action you have provided will
+        /// be called with bool = false (connection off) and a string message with the reason
+        /// of disconnection (error message).
         /// </summary>
         /// <param name="onConnectionStatusChange">
         /// Unity Action which will be called when connection change is detected.
@@ -132,7 +140,9 @@ namespace PetrushevskiApps.Utilities
         }
 
         /// <summary>
-        /// Stop testing connectivity when is not needed.
+        /// Use this method to stop connectivity check when this check is no more needed.
+        /// If not stopped the check is continuous and will run every ping interval
+        /// (according to settings in ConnectivityManager inspector) and will not stop by itself.
         /// </summary>
         public void StopConnectionCheck()
         {
