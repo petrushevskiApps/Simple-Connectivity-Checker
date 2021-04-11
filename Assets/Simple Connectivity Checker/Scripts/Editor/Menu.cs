@@ -36,7 +36,7 @@ namespace PetrushevskiApps.Utilities
         [MenuItem("Connectivity Checker/Guide", false, 3)]
         private static void ShowGuide()
         {
-
+            Application.OpenURL("https://github.com/petrushevskiApps/Simple-Connectivity-Checker");
         }
 
         
