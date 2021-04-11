@@ -1,7 +1,4 @@
 using PetrushevskiApps.Utilities;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,11 +19,11 @@ public class UIConnectivityToggle : MonoBehaviour
     {
         if (ConnectivityManager.Instance.IsTestingConnectivity)
         {
-            btnText.text = "Testing Connectivity ON";
+            btnText.text = "Stop testing connectivity \n ( State ON )";
         }
         else
         {
-            btnText.text = "Testing Connectivity OFF";
+            btnText.text = "Start testing connectivity \n ( State OFF )";
         }
     }
 

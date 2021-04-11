@@ -1,7 +1,4 @@
 using PetrushevskiApps.Utilities;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +24,6 @@ public class UINetworkButton : MonoBehaviour
         if(!string.IsNullOrEmpty(errorMsg))
         {
             Debug.LogWarning(errorMsg);
-        }    
+        }
     }
 }

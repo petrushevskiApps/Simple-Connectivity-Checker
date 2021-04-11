@@ -34,6 +34,10 @@ namespace PetrushevskiApps.Utilities
         private Coroutine connectionTestCoroutine;
         private bool isConnectedDebugToggle = true;
 
+        /// <summary>
+        /// Use this property to check if Connectivity Checker is running
+        /// or it was stopped.
+        /// </summary>
         public bool IsTestingConnectivity { get; private set; } = false;
         
         public bool IsConnectedDebugToggle
@@ -69,7 +73,7 @@ namespace PetrushevskiApps.Utilities
                 if (isConnected == value) return;
                 isConnected = value;
                 OnConnectivityChange.Invoke(isConnected, webRequest.error);
-                PrintDebugMessage($"Is Connected:: {isConnected}");
+                PrintDebugMessage($"Is Connected:: {isConnected}", MessageType.Verbose);
             }
         }
 
@@ -111,7 +115,8 @@ namespace PetrushevskiApps.Utilities
         }
 
         /// <summary>
-        /// Start testing connectivity.
+        /// Start testing connectivity. Use "StartOnAwake" bool to start checking connectivity
+        /// on awake. Or disable "StartOnAwake" and call this method when you need to start checking.
         /// </summary>
         public void StartConnectionCheck()
         {
@@ -122,12 +127,12 @@ namespace PetrushevskiApps.Utilities
             }
             else
             {
-                PrintDebugMessage("Connection check already started!");
+                PrintDebugMessage("Connection check already started!", MessageType.Warning);
             }
         }
 
         /// <summary>
-        /// Stop testing connectivity when is not needed. 
+        /// Stop testing connectivity when is not needed.
         /// </summary>
         public void StopConnectionCheck()
         {
@@ -139,7 +144,7 @@ namespace PetrushevskiApps.Utilities
             }
             else
             {
-                PrintDebugMessage("No active Connection check!");
+                PrintDebugMessage("No active Connection check!", MessageType.Warning);
             }
         }
 
@@ -147,38 +152,64 @@ namespace PetrushevskiApps.Utilities
         {
             while (true)
             {
-                webRequest = new UnityWebRequest(pingUrl);
-                yield return webRequest.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.Success)
+                if (!string.IsNullOrEmpty(pingUrl))
                 {
-                    if(Application.isEditor)
+                    webRequest = new UnityWebRequest(pingUrl);
+                    yield return webRequest.SendWebRequest();
+
+                    if (webRequest.result == UnityWebRequest.Result.Success)
                     {
-                        IsConnected = IsConnectedDebugToggle;
+                        if (Application.isEditor)
+                        {
+                            IsConnected = IsConnectedDebugToggle;
+                        }
+                        else
+                        {
+                            IsConnected = true;
+                        }
                     }
-                    else
+                    else if (webRequest.result != UnityWebRequest.Result.InProgress)
                     {
-                        IsConnected = true;
+                        IsConnected = false;
+                        PrintDebugMessage($"Connection Error::{webRequest.error}", MessageType.Warning);
                     }
+
                 }
-                else if (webRequest.result != UnityWebRequest.Result.InProgress)
+                else
                 {
                     IsConnected = false;
+                    PrintDebugMessage($"Ping URL in Connectivity Manager ( Inspector ) is missing", MessageType.Error);
                 }
-                
                 yield return new WaitForSeconds(pingInterval);
             }
         }
 
-        private void PrintDebugMessage(string msg)
+        private void PrintDebugMessage(string msg, MessageType msgType)
         {
             if (printDebugMessages)
             {
-                Debug.Log($"ConnectivityManager:: {msg}");
+                switch (msgType)
+                {
+                    case MessageType.Warning:
+                        Debug.LogWarning($"ConnectivityManager:: {msg}");
+                        break;
+                    case MessageType.Error:
+                        Debug.LogError($"ConnectivityManager:: {msg}");
+                        break;
+                    default:
+                        Debug.Log($"ConnectivityManager:: {msg}");
+                        break;
+                }
+                
             }
         }
 
-
+        private enum MessageType
+        {
+            Verbose,
+            Warning,
+            Error
+        }
     }
 
     [Serializable] public class UnityConnectivityEvent : UnityEvent<bool, string> { }
