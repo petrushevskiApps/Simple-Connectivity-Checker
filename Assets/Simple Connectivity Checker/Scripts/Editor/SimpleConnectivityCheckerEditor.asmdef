@@ -1,8 +1,12 @@
 {
-    "name": "SimpleConnectivityChecker",
+    "name": "SimpleConnectivityCheckerEditor",
     "rootNamespace": "",
-    "references": [],
-    "includePlatforms": [],
+    "references": [
+        "GUID:1e831a0783801eb4caf521f2634a3e56"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
